@@ -27,6 +27,11 @@ input#btnCurrentLocation {
   background: url(https://s3.us-east-2.amazonaws.com/joe-random/6533.png) no-repeat right top;
 }
 
+input#btnApplySettings {
+  background-color: #000;
+  height: 2.7em;
+}
+
 input[type=text]
 {
   background-color: #FFFF99;
@@ -47,10 +52,6 @@ hr {
 
 div#min {
   text-align: center;
-}
-
-input#btnApplySettings {
-  height: 2.7em;
 }
 
 p {
