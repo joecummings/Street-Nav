@@ -1,4 +1,103 @@
-3
+// Distance in feet to speak approaching street.
+var m_dblApproachDistanceKm = convertFTtoKM(200.0);
+
+var m_bSpeakLocation = false;
+
+// Intersection history, last X items.
+var m_aryIntersectionHistory = new Array();
+
+// Position history, last X items.
+var m_aryPositionHistory = new Array();
+var m_iDirectionTimeMs = 10000;
+
+var m_strLastIntersection = "";
+var m_strLastAddress = "";
+
+function setCookie(cname) {
+    var date = new Date();
+    date.setTime(date.getTime() + (14*24*60*60*1000));
+    var expires = "expires="+ date.toUTCString();
+    document.cookie = cname + "=" + m_strUsername + ";" + expires;
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+function checkCookie() {
+    m_strUsername=getCookie("username");
+    if (m_strUsername != "") {
+        //do nothing
+    } else {
+       m_strUsername = prompt("To use this service, you must enter your GeoName username below : ", "Username");
+       if (m_strUsername != "" && m_strUsername != null) {
+           setCookie("username", m_strUsername, 30);
+       }
+    }
+}
+
+$(document).ready(function()
+{		
+  document.getElementById('edAddressTimeout').value = Number(m_iAddrFrequencyMs / 1000).toFixed(1);
+  document.getElementById('edIntersectionTimeout').value = Number(m_iIntersectionFrequencyMs / 1000).toFixed(1);
+  document.getElementById('edDirectionTime').value = Number(m_iDirectionTimeMs / 1000).toFixed(1);
+  document.getElementById('edIntersectionApproach').value = Number(convertKMtoFT(m_dblApproachDistanceKm)).toFixed(1);
+    
+  if('speechSynthesis' in window) 
+  {
+    // You're good to go!
+  }
+  else 
+  {
+    alert("Text to Speech is not available in this browser");
+  }
+  
+  if('geolocation' in navigator)
+  {
+    // You're good to go!
+  }
+  else
+  {
+    alert("Geolocation is not available in this browser");
+  }
+  
+  $("#btnFollowStreets").click(function(e)
+  {
+    // Stops our form from resetting and going to the top of the page.
+    // If the form is just a div, preventDefault is not needed.
+    e.preventDefault();
+    
+    if(m_idFollowStreets == 0)
+    {
+      // This is stupid, but ios needs some text spoken here.
+      SpeakText("Start");
+      
+      StartFollowingStreets();
+      this.value = "Stop";
+    }
+    else
+    {
+      SpeakText("Stop");
+      StopFollowingStreets();
+      this.value = "Start";
+      
+      // Reset our values
+      m_aryIntersectionHistory.length = 0;
+
+	  m_strLastIntersection = "";
+      m_strLastAddress = "";
     }
   });
     
@@ -248,4 +347,4 @@ function GetBearingFromPositions(aryPositionHistory, iMilliseconds)
   }
   
   return GetBearing(fromPosition, toPosition);
-};
+};	
