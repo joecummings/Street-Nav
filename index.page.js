@@ -52,7 +52,7 @@ $(document).ready(function()
 {		
   document.getElementById('edAddressTimeout').value = Number(m_iAddrFrequencyMs / 1000).toFixed(1);
 //   document.getElementById('edIntersectionTimeout').value = Number(m_iIntersectionFrequencyMs / 1000).toFixed(1);
-  document.getElementById('edDirectionTime').value = Number(m_iDirectionTimeMs / 1000).toFixed(1);
+//   document.getElementById('edDirectionTime').value = Number(m_iDirectionTimeMs / 1000).toFixed(1);
   document.getElementById('edIntersectionApproach').value = Number(convertKMtoFT(m_dblApproachDistanceKm)).toFixed(1);
     
   if('speechSynthesis' in window) 
